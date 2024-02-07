@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CoinsItem from "./CoinsItem";
+import { Link } from "react-router-dom";
+import Loading from "../utils/Loading";
 
 interface CoinProps {
   id: string;
@@ -17,6 +19,18 @@ interface CoinProps {
 }
 
 const Coin: React.FC<CoinProps> = ({ coins }) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (coins.length) {
+      setLoading(false);
+    }
+  }, [coins]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <div className="max-w-screen-xl mx-auto ">
       <div>
@@ -30,7 +44,11 @@ const Coin: React.FC<CoinProps> = ({ coins }) => {
         </div>
 
         {coins.map((coin) => {
-          return <CoinsItem coins={coin} key={coin.id} />;
+          return (
+            <Link to={`/coin/${coin.id}`} key={coin.id}>
+              <CoinsItem coins={coin} />;
+            </Link>
+          );
         })}
       </div>
     </div>
